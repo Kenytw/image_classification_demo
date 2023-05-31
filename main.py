@@ -9,8 +9,6 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 
 batch_size = 16
-
-# All images are 128x128 pixels
 img_size = (128, 128)
 
 # The folder contains a subfolder for each class of shape
@@ -139,17 +137,15 @@ if (torch.cuda.is_available()):
 
 # Create an instance of the model class and allocate it to the device
 model = Net(num_classes=len(classes)).to(device)
-model.load_state_dict(torch.load('nba.pth'))
+# model.load_state_dict(torch.load('nba.pth')) # Load existed model
 
 def train(model, device, train_loader, optimizer, epoch):
-    # Set the model to training mode
     model.train()
     train_loss = 0
     print("Epoch:", epoch)
     # Process the images in batches
     for batch_idx, (data, target) in enumerate(train_loader):
         # Use the CPU or GPU as appropriate
-        # Recall that GPU is optimized for the operations we are dealing with
         data, target = data.to(device), target.to(device)
 
         # Reset the optimizer
@@ -169,7 +165,6 @@ def train(model, device, train_loader, optimizer, epoch):
         optimizer.step()
 
         # Print metrics so we see some progress
-        # print('\tTraining batch {} Loss: {:.6f}'.format(batch_idx + 1, loss.item()))
         print_overwrite(batch_idx + 1, len(train_loader), loss.item(), 'train')
 
     # return average loss for the epoch
@@ -225,7 +220,7 @@ validation_loss = []
 epochs = 20
 print('Training on', device)
 
-loss_min = 6.184725 # np.inf # last time best loss
+loss_min = np.inf # last time best loss
 
 for epoch in range(1, epochs + 1):
     train_loss = train(model, device, train_loader, optimizer, epoch)

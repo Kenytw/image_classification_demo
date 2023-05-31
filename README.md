@@ -1,1 +1,1 @@
-# image_classification_demo
+# image_classification_test
